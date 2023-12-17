@@ -17,7 +17,7 @@ const ProfileForm = () => {
       const res = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyBG525dQLh8AKxMmQHyiyUSkRG5YJkahPw',{
         method : 'POST',
         body : JSON.stringify({
-          idToken: autCntxt.token,
+          idToken: localStorage.getItem('token'),
           password: enteredPassword,
           returnSecureToken: true
         }),
@@ -28,7 +28,9 @@ const ProfileForm = () => {
 
       const data = await res.json()
 
+      localStorage.setItem('token',data.idToken)
       autCntxt.login(data.idToken)
+      
 
       console.log(data)
     } catch (err) {

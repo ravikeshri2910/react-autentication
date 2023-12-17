@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link ,useHistory} from 'react-router-dom';
 
 import classes from './MainNavigation.module.css';
@@ -7,13 +7,28 @@ import AuthContext from '../../Store/AuthContext';
 
 const MainNavigation = () => {
 
+  const [isLoggedIn , setIsLoggedIn] = useState(false)
   const authCntx = useContext(AuthContext)
   const History = useHistory()
 
-  const isLoggedIn = authCntx.isLoggedIn
+  // const isLoggedIn = authCntx.isLoggedIn
+
+  const token = localStorage.getItem('token')
+
+  useEffect(()=>{
+    if(token){
+      setIsLoggedIn(true)
+    }else{
+      setIsLoggedIn(false)
+      console.log('logOut')
+    }
+
+  },[token])
+
 
   const logOutHandler = () =>{
     authCntx.logout()
+    localStorage.removeItem('token')
     History.push('/auth')
   }
 

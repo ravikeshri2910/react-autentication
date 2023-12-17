@@ -95,9 +95,11 @@ const AuthForm = () => {
       }else{
         console.log(data.idToken)
 
+        localStorage.setItem('token',data.idToken)
+
         authCntx.login(data.idToken)
         
-        alert('ogin done')
+        alert('Login done')
       }
     }catch(error){
       console.log('error','here')
