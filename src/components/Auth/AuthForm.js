@@ -1,10 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef , useContext, useCallback } from 'react';
 
 import classes from './AuthForm.module.css';
+import AuthContext from '../../Store/AuthContext';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLodding, setIsLodding] = useState(false);
+
+  const authCntx = useContext(AuthContext)
 
   const enteredEmailRef = useRef()
   const enteredPasswordRef = useRef()
@@ -13,7 +16,7 @@ const AuthForm = () => {
     setIsLogin((prevState) => !prevState);
   };
   
-  const submiSinuptHandler = async (event) => {
+  const submiSinuptHandler = useCallback(async (event) => {
     
     try {
       const enteredEmail = enteredEmailRef.current.value;
@@ -21,7 +24,7 @@ const AuthForm = () => {
       event.preventDefault()
 
 
-      console.log(enteredEmail , enteredPassword)
+      // console.log(enteredEmail , enteredPassword)
 
       setIsLodding(true)
 
@@ -38,21 +41,27 @@ const AuthForm = () => {
       })
 
       setIsLodding(false)
+      // console.log('first')
+      enteredEmailRef.current.value = '';
+      enteredPasswordRef.current.value = '';
+      // console.log('first')
       const data = await res.json();
+      // console.log('sec')
       const msg = 'Account created'
-      console.log('user', data.error.message);
+      console.log('user', data);
       if (msg) {
         alert(msg)
       }
     } catch (error) {
       setIsLodding(false)
-      alert(error.message);
+      console.log(error)
+      // alert(error.message);
       // Handle error cases, such as displaying an error message to the user
     }
 
-  }
+  },[])
 
-  const submiLogIntHandler = async(event) =>{
+  const submiLogIntHandler = useCallback(async(event) =>{
     event.preventDefault()
     console.log('login')
 
@@ -60,7 +69,7 @@ const AuthForm = () => {
       const enteredEmail = enteredEmailRef.current.value;
       const enteredPassword = enteredPasswordRef.current.value;
 
-      console.log('login' , enteredEmail , enteredPassword)
+      // console.log('login' , enteredEmail , enteredPassword)
       setIsLodding(true)
       const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBG525dQLh8AKxMmQHyiyUSkRG5YJkahPw`, {
         method : 'POST',
@@ -76,19 +85,26 @@ const AuthForm = () => {
 
       setIsLodding(false)
 
+      enteredEmailRef.current.value = '';
+      enteredPasswordRef.current.value = '';
+
       const data = await res.json()
       if(data.error){
         alert(data.error.message)
         console.log(data)
       }else{
         console.log(data.idToken)
+
+        authCntx.login(data.idToken)
+        
+        alert('ogin done')
       }
     }catch(error){
       console.log('error','here')
     }
 
 
-  }
+  },[authCntx])
 
   return (
     <section className={classes.auth}>
