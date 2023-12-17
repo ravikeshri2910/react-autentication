@@ -9,37 +9,37 @@ const AuthContext = React.createContext({
 });
 
 
-export const AuthContextProvider = (props) =>{
+export const AuthContextProvider = (props) => {
     const initialToken = localStorage.getItem('token')
 
-    const [token , setToken] = useState(initialToken)
+    const [token, setToken] = useState(initialToken)
 
     const userLogedIn = !!token
 
-    const loginHandler = (token) =>{
+    const loginHandler = (token) => {
         setToken(token)
         localStorage.setItem('token', token)
     }
 
-    const logOutHandler = () =>{
+    const logOutHandler = () => {
         setToken('')
         localStorage.removeItem('token')
     }
 
 
+    // auto logout
+    setTimeout(() => {
+        // alert('Session expired')
+        localStorage.removeItem('token')
+        setToken('')
+    }, 2000)
 
-        // setTimeout(()=>{
-        //     // alert('Session expired')
-        //     localStorage.removeItem('token')
-        //     setToken('')
-        // },2000)
-  
 
     const contextValue = {
-        token : token,
-        isLoggedIn : userLogedIn,
-        login : loginHandler,
-        logout : logOutHandler
+        token: token,
+        isLoggedIn: userLogedIn,
+        login: loginHandler,
+        logout: logOutHandler
     }
 
     return <AuthContext.Provider value={contextValue}>
