@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 const AuthContext = React.createContext({
@@ -10,18 +10,30 @@ const AuthContext = React.createContext({
 
 
 export const AuthContextProvider = (props) =>{
+    const initialToken = localStorage.getItem('token')
 
-    const [token , setToken] = useState('')
+    const [token , setToken] = useState(initialToken)
 
     const userLogedIn = !!token
 
     const loginHandler = (token) =>{
         setToken(token)
+        localStorage.setItem('token', token)
     }
 
     const logOutHandler = () =>{
         setToken('')
+        localStorage.removeItem('token')
     }
+
+
+
+        // setTimeout(()=>{
+        //     // alert('Session expired')
+        //     localStorage.removeItem('token')
+        //     setToken('')
+        // },2000)
+  
 
     const contextValue = {
         token : token,

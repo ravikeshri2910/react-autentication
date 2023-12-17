@@ -95,7 +95,7 @@ const AuthForm = () => {
       }else{
         console.log(data.idToken)
 
-        localStorage.setItem('token',data.idToken)
+        // localStorage.setItem('token',data.idToken)
 
         authCntx.login(data.idToken)
         
